@@ -10,14 +10,15 @@ import CategoryAuthorNavigation from "./GlossaryAuthorNavigation";
 import GlossaryAuthorCategoriesNavigation from "./GlossaryAuthorCategoriesNavigation";
 import GlossaryAuthorChildCategoriesNavigation from "./GlossaryAuthorChildCategoriesNavigation";
 import GlossaryAuthorTermsNavigation from "./GlossaryAuthorTermsNavigation";
+import GlossaryAuthorBreadCrumb from "../GlossaryAuthorBreadCrumb";
 // children components
 import GlossaryChildren from "../GlossaryChildren";
 import CategoryChildren from "../CategoryChildren";
-// create glossary 
+// create glossary
 import CreateGlossary from "../create/CreateGlossary";
 // update glossary
 import UpdateGlossary from "../update/UpdateGlossary";
-// create Terms components 
+// create Terms components
 import CreateTerm from "../create/CreateTerm";
 import CreateTermWizard from "../wizards/CreateTermWizard";
 import CreateCategorizedTerm from "../create/CreateCategorizedTerm";
@@ -36,7 +37,7 @@ import UpdateCategory from "../update/UpdateCategory";
 export default function GlossaryAuthorRoutes({ glossaryAuthorURL }) {
   console.log("glossaryAuthorURL=" + glossaryAuthorURL);
 
-  // the top paths 
+  // the top paths
   function getGlossariesPath() {
     let path;
     const currentLocationArray = glossaryAuthorURL.split("/");
@@ -113,12 +114,12 @@ export default function GlossaryAuthorRoutes({ glossaryAuthorURL }) {
     console.log("getQuickTerms " + path);
     return path;
   }
-    // quickterms for category
-    function getCategoryQuickTermsPath() {
-      const path = getCategoriesPath() + "/:categoryguid/quick-category-terms";
-      console.log("getCategoryQuickTerms " + path);
-      return path;
-    }
+  // quickterms for category
+  function getCategoryQuickTermsPath() {
+    const path = getCategoriesPath() + "/:categoryguid/quick-category-terms";
+    console.log("getCategoryQuickTerms " + path);
+    return path;
+  }
   // glossary children
   function getGlossaryChildrenPath() {
     const path = getGlossariesPath() + "/:glossaryguid/children";
@@ -157,150 +158,169 @@ export default function GlossaryAuthorRoutes({ glossaryAuthorURL }) {
     console.log("getGlossaryCategoriesChildrenPath " + path);
     return path;
   }
-    // category children
-    function getCategoryChildrenPath() {
-      const path = getCategoriesPath() + "/:categoryguid/children";
-      console.log("getCategoriesChildren " + path);
-      return path;
-    }
-    function getCategoryChildrenAddTermPath() {
-      const path = getCategoryTermsChildrenPath() + "/add-term";
-      console.log("getCategoryChildrenAddTermPath() " + path);
-      return path;
-    }
-    function getCategoryChildrenAddCategoryPath() {
-      const path = getCategoryCategoriesChildrenPath() + "/add-category";
-      console.log("getCategoryChildrenAddCategoryPath() " + path);
-      return path;
-    }
-    function getCategoryChildrenEditTermPath() {
-      const path = getCategoryTermsChildrenPath() + "/edit-term/:guidtoedit";
-      console.log("getCategoryChildrenEditTermPath() " + path);
-      return path;
-    }
-    function getCategoryChildrenEditCategoryPath() {
-      const path =
-        getCategoryCategoriesChildrenPath() + "/edit-category/:guidtoedit";
-      console.log("getCategoryChildrenEditCategoryPath() " + path);
-      return path;
-    }
-  
-    function getCategoryTermsChildrenPath() {
-      const path = getCategoryChildrenPath() + "/terms";
-      console.log("getCategoryTermsChildrenPath " + path);
-      return path;
-    }
-    function getCategoryCategoriesChildrenPath() {
-      const path = getCategoryChildrenPath() + "/categories/children";
-      console.log("getCategoryCategoriesChildrenPath " + path);
-      return path;
-    }
+  // category children
+  function getCategoryChildrenPath() {
+    const path = getCategoriesPath() + "/:categoryguid/children";
+    console.log("getCategoriesChildren " + path);
+    return path;
+  }
+  function getCategoryChildrenAddTermPath() {
+    const path = getCategoryTermsChildrenPath() + "/add-term";
+    console.log("getCategoryChildrenAddTermPath() " + path);
+    return path;
+  }
+  function getCategoryChildrenAddCategoryPath() {
+    const path = getCategoryCategoriesChildrenPath() + "/add-category";
+    console.log("getCategoryChildrenAddCategoryPath() " + path);
+    return path;
+  }
+  function getCategoryChildrenEditTermPath() {
+    const path = getCategoryTermsChildrenPath() + "/edit-term/:guidtoedit";
+    console.log("getCategoryChildrenEditTermPath() " + path);
+    return path;
+  }
+  function getCategoryChildrenEditCategoryPath() {
+    const path =
+      getCategoryCategoriesChildrenPath() + "/edit-category/:guidtoedit";
+    console.log("getCategoryChildrenEditCategoryPath() " + path);
+    return path;
+  }
+
+  function getCategoryTermsChildrenPath() {
+    const path = getCategoryChildrenPath() + "/terms";
+    console.log("getCategoryTermsChildrenPath " + path);
+    return path;
+  }
+  function getCategoryCategoriesChildrenPath() {
+    const path = getCategoryChildrenPath() + "/categories/children";
+    console.log("getCategoryCategoriesChildrenPath " + path);
+    return path;
+  }
 
   return (
-    <Switch>
-      <Route path={getGlossariesAddPath()} component={CreateGlossary}></Route>
-      <Route path={getTermsAddPath()} component={CreateTermWizard}></Route>
-      <Route path={getCategoriesAddPath()} component={CreateCategoryWizard}></Route>
-      <Route path={getGlossariesEditPath()} component={UpdateGlossary}></Route>
-      <Route path={getTermsEditPath()} component={UpdateTerm}></Route>
-      <Route path={getCategoriesEditPath()} component={UpdateCategory}></Route>
-      <Redirect path={glossaryAuthorURL} exact to={getGlossariesPath()} />
-      <Route
-        exact
-        path={getGlossariesPath()}
-        component={GlossaryAuthorNavigation}
-      ></Route>
-      <Route
-        exact
-        path={getTermsPath()}
-        component={TermAuthorNavigation}
-      ></Route>
-      <Route
-        exact
-        path={getCategoriesPath()}
-        component={CategoryAuthorNavigation}
-      ></Route>
-      <Route
-        path={getGlossaryChildrenAddTermPath()}
-        exact
-        component={CreateTerm}
-      ></Route>
-      <Route
-        path={getGlossaryChildrenAddCategoryPath()}
-        exact
-        component={CreateCategory}
-      ></Route>
-      <Route
-        path={getGlossaryChildrenEditTermPath()}
-        exact
-        component={UpdateTerm}
-      ></Route>
-      <Route
-        path={getGlossaryChildrenEditCategoryPath()}
-        exact
-        component={UpdateCategory}
-      ></Route>
+    <div>
+      <GlossaryAuthorBreadCrumb />
 
-      <Route path={getGlossaryQuickTermsPath()} component={GlossaryQuickTerms}></Route>
-      <Route
-        path={getGlossaryChildrenPath()}
-        component={GlossaryChildren}
-      ></Route>
-      <Route
-        path={getGlossaryTermsChildrenPath()}
-        component={GlossaryAuthorTermsNavigation}
-      ></Route>
-      <Route
-        path={getGlossaryCategoriesChildrenPath()}
-        component={GlossaryAuthorCategoriesNavigation}
-      ></Route>
+      <Switch>
+        <Route path={getGlossariesAddPath()} component={CreateGlossary}></Route>
+        <Route path={getTermsAddPath()} component={CreateTermWizard}></Route>
+        <Route
+          path={getCategoriesAddPath()}
+          component={CreateCategoryWizard}
+        ></Route>
+        <Route
+          path={getGlossariesEditPath()}
+          component={UpdateGlossary}
+        ></Route>
+        <Route path={getTermsEditPath()} component={UpdateTerm}></Route>
+        <Route
+          path={getCategoriesEditPath()}
+          component={UpdateCategory}
+        ></Route>
+        <Redirect path={glossaryAuthorURL} exact to={getGlossariesPath()} />
+        <Route
+          exact
+          path={getGlossariesPath()}
+          component={GlossaryAuthorNavigation}
+        ></Route>
+        <Route
+          exact
+          path={getTermsPath()}
+          component={TermAuthorNavigation}
+        ></Route>
+        <Route
+          exact
+          path={getCategoriesPath()}
+          component={CategoryAuthorNavigation}
+        ></Route>
+        <Route
+          path={getGlossaryChildrenAddTermPath()}
+          exact
+          component={CreateTerm}
+        ></Route>
+        <Route
+          path={getGlossaryChildrenAddCategoryPath()}
+          exact
+          component={CreateCategory}
+        ></Route>
+        <Route
+          path={getGlossaryChildrenEditTermPath()}
+          exact
+          component={UpdateTerm}
+        ></Route>
+        <Route
+          path={getGlossaryChildrenEditCategoryPath()}
+          exact
+          component={UpdateCategory}
+        ></Route>
 
-      <Route
-        path={getGlossariesPath()}
-        component={GlossaryAuthorNavigation}
-      ></Route>
-      <Route
-        path={glossaryAuthorURL}
-        exact
-        component={GlossaryAuthorNavigation}
-      ></Route>
-      <Route
-        path={getCategoryChildrenPath()}
-        component={CategoryChildren}
-        exact
-      ></Route>
-       <Route
-        path={getCategoryChildrenAddTermPath()}
-        exact
-        component={CreateCategorizedTerm}
-      ></Route>
-      <Route
-        path={getCategoryChildrenAddCategoryPath()}
-        exact
-        component={CreateChildCategory}
-      ></Route>
-      <Route
-        path={getCategoryChildrenEditTermPath()}
-        exact
-        component={UpdateTerm}
-      ></Route>
-      <Route
-        path={getCategoryChildrenEditCategoryPath()}
-        exact
-        component={UpdateCategory}
-      ></Route>
+        <Route
+          path={getGlossaryQuickTermsPath()}
+          component={GlossaryQuickTerms}
+        ></Route>
+        <Route
+          path={getGlossaryChildrenPath()}
+          component={GlossaryChildren}
+        ></Route>
+        <Route
+          path={getGlossaryTermsChildrenPath()}
+          component={GlossaryAuthorTermsNavigation}
+        ></Route>
+        <Route
+          path={getGlossaryCategoriesChildrenPath()}
+          component={GlossaryAuthorCategoriesNavigation}
+        ></Route>
 
-      <Route path={getCategoryQuickTermsPath()} component={CreateCategorizedQuickTerms}></Route>
-      <Route
-        path={getCategoryTermsChildrenPath()}
-        component={GlossaryAuthorTermsNavigation}
-      ></Route>
-      <Route
-        path={getCategoryCategoriesChildrenPath()}
-        component={GlossaryAuthorChildCategoriesNavigation}
-      ></Route>
-      <Route path="/" render={() => <h1>Route not recognised</h1>}></Route>
-      {/* <Route render={() => <h1>Route not recognised!!</h1>}></Route> */}
-    </Switch>
+        <Route
+          path={getGlossariesPath()}
+          component={GlossaryAuthorNavigation}
+        ></Route>
+        <Route
+          path={glossaryAuthorURL}
+          exact
+          component={GlossaryAuthorNavigation}
+        ></Route>
+        <Route
+          path={getCategoryChildrenPath()}
+          component={CategoryChildren}
+          exact
+        ></Route>
+        <Route
+          path={getCategoryChildrenAddTermPath()}
+          exact
+          component={CreateCategorizedTerm}
+        ></Route>
+        <Route
+          path={getCategoryChildrenAddCategoryPath()}
+          exact
+          component={CreateChildCategory}
+        ></Route>
+        <Route
+          path={getCategoryChildrenEditTermPath()}
+          exact
+          component={UpdateTerm}
+        ></Route>
+        <Route
+          path={getCategoryChildrenEditCategoryPath()}
+          exact
+          component={UpdateCategory}
+        ></Route>
+
+        <Route
+          path={getCategoryQuickTermsPath()}
+          component={CreateCategorizedQuickTerms}
+        ></Route>
+        <Route
+          path={getCategoryTermsChildrenPath()}
+          component={GlossaryAuthorTermsNavigation}
+        ></Route>
+        <Route
+          path={getCategoryCategoriesChildrenPath()}
+          component={GlossaryAuthorChildCategoriesNavigation}
+        ></Route>
+        <Route path="/" render={() => <h1>Route not recognised</h1>}></Route>
+        {/* <Route render={() => <h1>Route not recognised!!</h1>}></Route> */}
+      </Switch>
+    </div>
   );
 }
