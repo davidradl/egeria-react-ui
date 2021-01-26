@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Breadcrumb, BreadcrumbItem } from "carbon-components-react";
 import { useHistory, Link } from "react-router-dom";
 
@@ -108,7 +108,7 @@ export default function GlossaryAuthorBreadCrumb(props) {
         let crumb = {};
         crumb.name = segments[i];
         if (crumb.name && crumb.name.length > 0) {
-          if (i == segments.length - 1) {
+          if (i === segments.length - 1) {
             crumb.url = "";
           } else {
             backupPrefix = backupPrefix + "../";
@@ -118,7 +118,7 @@ export default function GlossaryAuthorBreadCrumb(props) {
             "crumb name = " + crumb.name + ",crumb url = " + crumb.url
           );
 
-          if (segments[i] == "children"
+          if (segments[i] === "children"
           ) {
             crumb.name = segments[i-1] + " " + segments[i];
             i--;
