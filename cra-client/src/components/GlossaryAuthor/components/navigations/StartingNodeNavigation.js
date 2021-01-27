@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import { useLocation, useHistory } from "react-router-dom";
 
 export default function StartingNodeNavigation({
-  match, 
+  match,
   nodeTypeName,
   onSelectCallback,
 }) {
@@ -49,7 +49,10 @@ export default function StartingNodeNavigation({
   const [selectedNodeGuid, setSelectedNodeGuid] = useState();
   // const [debouncedFilterCriteria, setDebouncedFilterCriteria] = useState();
 
-  const nodeType = getNodeType(identificationContext.getRestURL("glossary-author"), nodeTypeName);
+  const nodeType = getNodeType(
+    identificationContext.getRestURL("glossary-author"),
+    nodeTypeName
+  );
 
   const location = useLocation();
   // Here's where the API call happens
@@ -58,11 +61,14 @@ export default function StartingNodeNavigation({
     () => {
       const query = new URLSearchParams(location.search);
       let isExactMatchSet = false;
-      if (query.get('exactMatch')) isExactMatchSet = (query.get('exactMatch') === 'true');
-      if (query.get('pageSize')) setPageSize(parseInt(query.get('pageSize')));
-      if (query.get('pageNumber')) setPageNumber(parseInt(query.get('pageNumber')));
-      if (query.get('exactMatch')) setExactMatch(isExactMatchSet);
-      //if (query.get('searchString')) setDebouncedFilterCriteria(query.get('searchString'));
+      if (query.get("exactMatch"))
+        isExactMatchSet = query.get("exactMatch") === "true";
+      if (query.get("pageSize")) setPageSize(parseInt(query.get("pageSize")));
+      if (query.get("pageNumber"))
+        setPageNumber(parseInt(query.get("pageNumber")));
+      if (query.get("exactMatch")) setExactMatch(isExactMatchSet);
+      if (query.get("searchString"))
+        setFilterCriteria(query.get("searchString"));
       // processUserCriteriaAndIssueSearch();
     },
     // This is the useEffect input array
@@ -92,9 +98,6 @@ export default function StartingNodeNavigation({
     // [debouncedFilterCriteria, exactMatch, pageSize, pageNumber]
     [pageSize, pageNumber, exactMatch, debouncedFilterCriteria]
   );
-  
-
-
 
   const paginationProps = () => ({
     disabled: false,
@@ -113,22 +116,36 @@ export default function StartingNodeNavigation({
   const onPagination = (options) => {
     console.log("onPaginationChange");
     console.log(options);
-    let queryParams = {}
-    if (options.pageSize) queryParams.pageSize=options.pageSize; 
-    if (options.page) queryParams.pageNumber=options.page;
+    let queryParams = {};
+    if (options.pageSize) queryParams.pageSize = options.pageSize;
+    if (options.page) queryParams.pageNumber = options.page;
     updateQueryParams(queryParams);
-
   };
   function updateQueryParams(newQueryParams) {
     const query = new URLSearchParams(location.search);
     for (var newQueryParam in newQueryParams) {
-       query.set(newQueryParam, newQueryParams[newQueryParam]);
+      query.set(newQueryParam, newQueryParams[newQueryParam]);
     }
     // Update the location with the new query params
     history.replace({
-      search: query.toString()
-    })
-  } 
+      search: encodeURI(query.toString())
+    });
+  }
+  function removeQueryParam(paramName) {
+    const query = new URLSearchParams(location.search);
+    console.log("query.get(paramName");
+    console.log(query.get(paramName));
+    if (query.get(paramName)) {
+      console.log("query.get(paramName");
+      query.delete(paramName);
+      console.log("query");
+      console.log(query);
+      // Update the location with the new query params
+      history.replace({
+        search: query.toString(),
+      });
+    }
+  }
 
   // Refresh the displayed nodes search results
   // this involves taking the results and pagination options and calculating nodes that is the subset needs to be displayed
@@ -138,17 +155,18 @@ export default function StartingNodeNavigation({
   function refreshNodes(results, passedPageSize, passedPageNumber) {
     let selectedInResults = false;
     // the total that we are trying to keep track of is all the previous pages plus the current results length.
-    // because we ask for one more thatn the page size the pagination widget should indicate a there is another page only if there really is  
+    // because we ask for one more thatn the page size the pagination widget should indicate a there is another page only if there really is
 
-    console.log("passed page number " +passedPageNumber);
-    console.log("passed page size " +passedPageSize);
+    console.log("passed page number " + passedPageNumber);
+    console.log("passed page size " + passedPageSize);
     console.log("resuilts length " + results.length);
     // define as a constant so that the + is an arithmetic + not a string concatination +.
-    const calculatedTotal =  ((passedPageNumber-1)*passedPageSize) + results.length;
+    const calculatedTotal =
+      (passedPageNumber - 1) * passedPageSize + results.length;
     console.log("total is going to be " + calculatedTotal);
     setTotal(calculatedTotal);
     if (results.length > passedPageSize) {
-      // remove the last element.  
+      // remove the last element.
       results.pop();
     }
     if (results && results.length > 0) {
@@ -186,7 +204,15 @@ export default function StartingNodeNavigation({
   // issue search for first page of nodes
   const issueNodeSearch = (criteria) => {
     // encode the URI. Be aware the more recent RFC3986 for URLs makes use of square brackets which are reserved (for IPv6)
-    const url = encodeURI(nodeType.url + "?searchCriteria=" + criteria + "&pageSize=" + (pageSize+1) + "&startingFrom="+((pageNumber-1)*pageSize));
+    const url = encodeURI(
+      nodeType.url +
+        "?searchCriteria=" +
+        criteria +
+        "&pageSize=" +
+        (pageSize + 1) +
+        "&startingFrom=" +
+        (pageNumber - 1) * pageSize
+    );
     issueRestGet(url, onSuccessfulSearch, onErrorSearch);
   };
 
@@ -215,7 +241,7 @@ export default function StartingNodeNavigation({
       // we are already on the first page so just refresh that content
       processUserCriteriaAndIssueSearch();
     } else {
-      // we are not on the first page, so set the page number to 1. Or we could end up showing an empty page with no pagination widget.   
+      // we are not on the first page, so set the page number to 1. Or we could end up showing an empty page with no pagination widget.
       setPageNumber(1);
     }
   };
@@ -235,7 +261,6 @@ export default function StartingNodeNavigation({
     });
     refreshNodes(json.result, pageSize, pageNumber);
     // setCompleteResults(json.result);
-
   };
 
   const onErrorSearch = (msg) => {
@@ -247,10 +272,9 @@ export default function StartingNodeNavigation({
   const onClickExactMatch = () => {
     console.log("onClickExactMatch");
     const checkBox = document.getElementById("node_nav_exact_Match");
-    let queryParams = {}
-    queryParams.exactMatch=checkBox.checked; 
+    let queryParams = {};
+    queryParams.exactMatch = checkBox.checked;
     updateQueryParams(queryParams);
-    
   };
 
   function getNodeChildrenUrl() {
@@ -286,10 +310,16 @@ export default function StartingNodeNavigation({
     return match.path + "/edit-" + nodeTypeName + "/" + selectedNodeGuid;
   }
   const onFilterCriteria = (e) => {
-    // let queryParams = {}
-    // queryParams.searchString=e.target.value; 
-    // updateQueryParams(queryParams);
-    setFilterCriteria(e.target.value);
+    let value = e.target.value;
+    if (value === undefined || value === "") {
+      value='.*';
+    } 
+    let queryParams = {};
+    queryParams.searchString = value;
+
+     updateQueryParams(queryParams);
+    
+    // setFilterCriteria(e.target.value);
   };
   const isSelected = (nodeGuid) => {
     return nodeGuid === selectedNodeGuid;
@@ -313,6 +343,7 @@ export default function StartingNodeNavigation({
               type="text"
               id="filter-input"
               onChange={onFilterCriteria}
+              value={filterCriteria}
               placeholder="Filter"
             />
           </article>
@@ -347,11 +378,13 @@ export default function StartingNodeNavigation({
                     <Term32 kind="primary" />
                   </Link>
                 )}
-              {selectedNodeGuid && !onSelectCallback && nodeTypeName !== "term" && (
-                <Link to={getNodeChildrenUrl}>
-                  <ParentChild32 kind="primary" />
-                </Link>
-              )}
+              {selectedNodeGuid &&
+                !onSelectCallback &&
+                nodeTypeName !== "term" && (
+                  <Link to={getNodeChildrenUrl}>
+                    <ParentChild32 kind="primary" />
+                  </Link>
+                )}
               {selectedNodeGuid && !onSelectCallback && (
                 <Link to={getEditNodeUrl()}>
                   <Edit32 kind="primary" />
