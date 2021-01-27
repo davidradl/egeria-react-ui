@@ -19,6 +19,7 @@ import NodeTableView from "../views/NodeTableView";
 import getNodeType from "../properties/NodeTypes.js";
 
 import { Link } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 
 export default function StartingNodeNavigation({
   match, 
@@ -31,7 +32,8 @@ export default function StartingNodeNavigation({
   const [total, setTotal] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-
+  let history = useHistory();
+  // State and setter for search term
   // State and setter for search term
   const [filterCriteria, setFilterCriteria] = useState("");
   const [exactMatch, setExactMatch] = useState(false);
@@ -42,24 +44,58 @@ export default function StartingNodeNavigation({
   // The goal is to only have the API call fire when user stops typing ...
   // ... so that we aren't hitting our API rapidly.
   const debouncedFilterCriteria = useDebounce(filterCriteria, 500);
+
   const [errorMsg, setErrorMsg] = useState();
   const [selectedNodeGuid, setSelectedNodeGuid] = useState();
+  // const [debouncedFilterCriteria, setDebouncedFilterCriteria] = useState();
 
   const nodeType = getNodeType(identificationContext.getRestURL("glossary-author"), nodeTypeName);
+
+  const location = useLocation();
   // Here's where the API call happens
   // We use useEffect since this is an asynchronous action
   useEffect(
     () => {
-      processUserCriteriaAndIssueSearch();
-      return null;
+      const query = new URLSearchParams(location.search);
+      let isExactMatchSet = false;
+      if (query.get('exactMatch')) isExactMatchSet = (query.get('exactMatch') === 'true');
+      if (query.get('pageSize')) setPageSize(parseInt(query.get('pageSize')));
+      if (query.get('pageNumber')) setPageNumber(parseInt(query.get('pageNumber')));
+      if (query.get('exactMatch')) setExactMatch(isExactMatchSet);
+      //if (query.get('searchString')) setDebouncedFilterCriteria(query.get('searchString'));
+      // processUserCriteriaAndIssueSearch();
     },
     // This is the useEffect input array
     // Our useEffect function will only execute if this value changes ...
     // ... and thanks to our hook it will only change if the original ...
     // value (FilterCriteria) hasn't changed for more than 500ms.
     // If the exactMatch changes then we need to re-issue the search.
-    [debouncedFilterCriteria, exactMatch, pageSize, pageNumber]
+    // [debouncedFilterCriteria, exactMatch, pageSize, pageNumber]
+    [location]
   );
+  useEffect(
+    () => {
+      // const query = new URLSearchParams(location.search);
+      // let isExactMatchSet = false;
+      // if (query.get('exactMatch')) isExactMatchSet = (query.get('exactMatch') === 'true');
+      // if (query.get('pageSize')) setPageSize(parseInt(query.get('pageSize')));
+      // if (query.get('pageNumber')) setPageNumber(parseInt(query.get('pageNumber')));
+      // if (query.get('exactMatch')) setExactMatch(isExactMatchSet);
+      //if (query.get('searchString')) setDebouncedFilterCriteria(query.get('searchString'));
+      processUserCriteriaAndIssueSearch();
+    },
+    // This is the useEffect input array
+    // Our useEffect function will only execute if this value changes ...
+    // ... and thanks to our hook it will only change if the original ...
+    // value (FilterCriteria) hasn't changed for more than 500ms.
+    // If the exactMatch changes then we need to re-issue the search.
+    // [debouncedFilterCriteria, exactMatch, pageSize, pageNumber]
+    [pageSize, pageNumber, exactMatch, debouncedFilterCriteria]
+  );
+  
+
+
+
   const paginationProps = () => ({
     disabled: false,
     page: pageNumber,
@@ -77,9 +113,22 @@ export default function StartingNodeNavigation({
   const onPagination = (options) => {
     console.log("onPaginationChange");
     console.log(options);
-    setPageSize(options.pageSize);
-    setPageNumber(options.page);
+    let queryParams = {}
+    if (options.pageSize) queryParams.pageSize=options.pageSize; 
+    if (options.page) queryParams.pageNumber=options.page;
+    updateQueryParams(queryParams);
+
   };
+  function updateQueryParams(newQueryParams) {
+    const query = new URLSearchParams(location.search);
+    for (var newQueryParam in newQueryParams) {
+       query.set(newQueryParam, newQueryParams[newQueryParam]);
+    }
+    // Update the location with the new query params
+    history.replace({
+      search: query.toString()
+    })
+  } 
 
   // Refresh the displayed nodes search results
   // this involves taking the results and pagination options and calculating nodes that is the subset needs to be displayed
@@ -198,7 +247,10 @@ export default function StartingNodeNavigation({
   const onClickExactMatch = () => {
     console.log("onClickExactMatch");
     const checkBox = document.getElementById("node_nav_exact_Match");
-    setExactMatch(checkBox.checked);
+    let queryParams = {}
+    queryParams.exactMatch=checkBox.checked; 
+    updateQueryParams(queryParams);
+    
   };
 
   function getNodeChildrenUrl() {
@@ -221,7 +273,8 @@ export default function StartingNodeNavigation({
     }
   };
   function getAddNodeUrl() {
-    return match.path + "/add-" + nodeTypeName;
+    // return match.path + "/add-" + nodeTypeName;
+    return match.path + "?action=CREATE";
   }
   function getGlossaryQuickTermsUrl() {
     return match.path + "/" + selectedNodeGuid + "/quick-terms";
@@ -233,6 +286,9 @@ export default function StartingNodeNavigation({
     return match.path + "/edit-" + nodeTypeName + "/" + selectedNodeGuid;
   }
   const onFilterCriteria = (e) => {
+    // let queryParams = {}
+    // queryParams.searchString=e.target.value; 
+    // updateQueryParams(queryParams);
     setFilterCriteria(e.target.value);
   };
   const isSelected = (nodeGuid) => {

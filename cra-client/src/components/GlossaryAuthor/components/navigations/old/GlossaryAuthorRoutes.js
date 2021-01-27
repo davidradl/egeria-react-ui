@@ -4,35 +4,35 @@ import React from "react";
 // import { IdentificationContext } from "../../../../contexts/IdentificationContext";
 import { Route, Switch, Redirect } from "react-router-dom";
 // navigation components
-import GlossaryAuthorNavigation from "./GlossaryAuthorNavigation";
-import TermAuthorNavigation from "./GlossaryAuthorNavigation";
-import CategoryAuthorNavigation from "./GlossaryAuthorNavigation";
+import GlossaryAuthorNavigation from "../GlossaryAuthorNavigation";
+import TermAuthorNavigation from "../GlossaryAuthorNavigation";
+import CategoryAuthorNavigation from "../GlossaryAuthorNavigation";
 import GlossaryAuthorCategoriesNavigation from "./GlossaryAuthorCategoriesNavigation";
 import GlossaryAuthorChildCategoriesNavigation from "./GlossaryAuthorChildCategoriesNavigation";
 import GlossaryAuthorTermsNavigation from "./GlossaryAuthorTermsNavigation";
-import GlossaryAuthorBreadCrumb from "../GlossaryAuthorBreadCrumb";
+import GlossaryAuthorBreadCrumb from "../../GlossaryAuthorBreadCrumb";
 // children components
-import GlossaryChildren from "../GlossaryChildren";
-import CategoryChildren from "../CategoryChildren";
+import GlossaryChildren from "../../GlossaryChildren";
+import CategoryChildren from "../../CategoryChildren";
 // create glossary
-import CreateGlossary from "../create/CreateGlossary";
+import CreateGlossary from "../../create/CreateGlossary";
 // update glossary
-import UpdateGlossary from "../update/UpdateGlossary";
+import UpdateGlossary from "../../update/UpdateGlossary";
 // create Terms components
-import CreateTerm from "../create/CreateTerm";
-import CreateTermWizard from "../wizards/CreateTermWizard";
-import CreateCategorizedTerm from "../create/CreateCategorizedTerm";
+import CreateTerm from "../../create/CreateTerm";
+import CreateTermWizard from "../../wizards/CreateTermWizard";
+import CreateCategorizedTerm from "../../create/CreateCategorizedTerm";
 // update Term
-import UpdateTerm from "../update/UpdateTerm";
+import UpdateTerm from "../../update/UpdateTerm";
 // create category components
-import CreateCategory from "../create/CreateCategory";
-import CreateCategoryWizard from "../wizards/CreateCategoryWizard";
-import CreateChildCategory from "../create/CreateChildCategory";
+import CreateCategory from "../../create/CreateCategory";
+import CreateCategoryWizard from "../../wizards/CreateCategoryWizard";
+import CreateChildCategory from "../../create/CreateChildCategory";
 // Quick terms
-import GlossaryQuickTerms from "../GlossaryQuickTerms";
-import CreateCategorizedQuickTerms from "../create/CreateCategorizedQuickTerms";
+import GlossaryQuickTerms from "../../GlossaryQuickTerms";
+import CreateCategorizedQuickTerms from "../../create/CreateCategorizedQuickTerms";
 // update Category
-import UpdateCategory from "../update/UpdateCategory";
+import UpdateCategory from "../../update/UpdateCategory";
 
 export default function GlossaryAuthorRoutes({ glossaryAuthorURL }) {
   console.log("glossaryAuthorURL=" + glossaryAuthorURL);

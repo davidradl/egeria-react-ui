@@ -42,10 +42,10 @@ export default function ConfigPreview({ options }) {
     setServerAttribute,
   } = useContext(ServerAuthorContext);
 
-  // const [editing_organizationName, setEditing_organizationName] = useState(false);
-  // const [editing_localServerUserId, setEditing_localServerUserId] = useState(false);
-  // const [editing_localServerPassword, setEditing_localServerPassword] = useState(false);
-  // const [editing_maxPageSize, setEditing_maxPageSize] = useState(false);
+  const [editing_organizationName, setEditing_organizationName] = useState(false);
+  const [editing_localServerUserId, setEditing_localServerUserId] = useState(false);
+  const [editing_localServerPassword, setEditing_localServerPassword] = useState(false);
+  const [editing_maxPageSize, setEditing_maxPageSize] = useState(false);
 
   if (!newServerConfig || newServerConfig === {} || newServerConfig === '') {
     return null;

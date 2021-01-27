@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { IdentificationContext } from "../../../contexts/IdentificationContext";
 import { ContentSwitcher, Switch } from "carbon-components-react";
 import GlossaryAuthorTermsNavigation from "./navigations/GlossaryAuthorTermsNavigation";
-import GlossaryAuthorCategoriesNavigation from "./navigations/GlossaryAuthorCategoriesNavigation";
+import GlossaryAuthorCategoriesNavigation from "./navigations/old/GlossaryAuthorCategoriesNavigation";
 import GlossaryAuthorChildCategoriesNavigation from "./navigations/GlossaryAuthorChildCategoriesNavigation";
 import getNodeType from "./properties/NodeTypes";
 import { useHistory, withRouter } from "react-router-dom";

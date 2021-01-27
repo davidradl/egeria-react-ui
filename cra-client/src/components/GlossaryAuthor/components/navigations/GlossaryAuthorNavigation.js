@@ -2,9 +2,9 @@
 /* Copyright Contributors to the ODPi Egeria project. */
 import React, { useState, useEffect } from "react";
 import { ContentSwitcher, Switch } from "carbon-components-react";
-import StartingGlossaryNavigation from "./StartingGlossaryNavigation";
-import StartingTermNavigation from "./StartingTermNavigation";
-import StartingCategoryNavigation from "./StartingCategoryNavigation";
+import StartingGlossaryNavigation from "./old/StartingGlossaryNavigation";
+import StartingTermNavigation from "./old/StartingTermNavigation";
+import StartingCategoryNavigation from "./old/StartingCategoryNavigation";
 import { useHistory, withRouter } from "react-router-dom";
 
 function GlossaryAuthorNavigation(props) {

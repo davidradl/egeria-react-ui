@@ -1,109 +1,66 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
-import React from "react";
+import React, { useContext } from "react";
 
-import { Route } from "react-router-dom";
-import GlossaryAuthorComponentChooser from "../GlossaryAuthorComponentChooser";
+import { Route, Switch } from "react-router-dom";
 
-// the top paths
-function getGlossariesTypePath() {
-  let path;
-  const currentLocationArray = glossaryAuthorURL.split("/");
-  const lastSegment = currentLocationArray[currentLocationArray.length - 1];
-  if (lastSegment === "glossaries") {
-    // if we are navigated to via the task drop down we get a url ending with glossaries
-    path = glossaryAuthorURL;
-  } else {
-    // if we are navigated to as the default component loaded under glossary-author then we need to append the glossaries
-    path = glossaryAuthorURL + "/glossaries";
-  }
-  console.log("getGlossariesPath " + path);
-  return path;
-}
-function getGlossariesIdPath() {
-  let path;
-  const currentLocationArray = glossaryAuthorURL.split("/");
-  const lastSegment = currentLocationArray[currentLocationArray.length - 1];
-  if (lastSegment === "glossaries") {
-    // if we are navigated to via the task drop down we get a url ending with glossaries
-    path = glossaryAuthorURL;
-  } else {
-    // if we are navigated to as the default component loaded under glossary-author then we need to append the glossaries
-    path = glossaryAuthorURL + "/glossaries";
-  }
-  console.log("getGlossariesPath " + path);
-  return path;
-}
-function getTermsTypePath() {
-  let path;
-  const currentLocationArray = glossaryAuthorURL.split("/");
-  const lastSegment = currentLocationArray[currentLocationArray.length - 1];
-  if (lastSegment === "terms") {
-    // if we are navigated to via the task drop down we get a url ending with terms
-    path = glossaryAuthorURL;
-  } else {
-    // if we are navigated to as the default component loaded under glossary-author then we need to append the terms
-    path = glossaryAuthorURL + "/terms";
-  }
-  console.log("getTermsPath " + path);
-  return path;
-}
-function getCategoriesTypePath() {
-  let path;
-  const currentLocationArray = glossaryAuthorURL.split("/");
-  const lastSegment = currentLocationArray[currentLocationArray.length - 1];
-  if (lastSegment === "categories") {
-    // if we are navigated to via the task drop down we get a url ending with terms
-    path = glossaryAuthorURL;
-  } else {
-    // if we are navigated to as the default component loaded under glossary-author then we need to append the categories
-    path = glossaryAuthorURL + "/categories";
-  }
-  console.log("getCategriesPath " + path);
-  return path;
-}
+import { IdentificationContext } from "../../../../contexts/IdentificationContext";
+import GlossaryAuthorBreadCrumb from "../GlossaryAuthorBreadCrumb";
 
-export default function GlossaryAuthorResourceRoutes({ glossaryAuthorURL }) {
+import GlossaryTypeResourceNavigation from "./GlossaryTypeResourceNavigation";
+import CategoryTypeResourceNavigation from "./CategoryTypeResourceNavigation";
+import TermTypeResourceNavigation     from "./TermTypeResourceNavigation";
+
+import GlossaryIdResourceNavigation   from "./GlossaryIdResourceNavigation";
+import CategoryIdResourceNavigation   from "./CategoryIdResourceNavigation";
+import TermIdResourceNavigation       from "./TermIdResourceNavigation";
+
+export default function GlossaryAuthorResourceRoutes() {
+  const identificationContext = useContext(IdentificationContext);
+  const getGlossaryAuthorURL = () => identificationContext.getBrowserURL("glossary-author");
+
   return (
     <div>
       <GlossaryAuthorBreadCrumb />
 
       <Switch>
-        {/* <Route path={`${match.url}/:id`} component={GlossaryAuthorComponentChooser}/> */}
-
-        {/* top types  */}
+        {/* types  */}
         <Route
           exact
-          path={getGlossariesTypePath()}
-          component={GlossaryTypeNavigation}
+          path={getGlossaryAuthorURL()}
+          component={GlossaryTypeResourceNavigation}
         ></Route>
         <Route
           exact
-          path={getTermsTypePath()}
-          component={TermTypeNavigation}
+          path={getGlossaryAuthorURL() + "/glossaries"}
+          component={GlossaryTypeResourceNavigation}
         ></Route>
         <Route
           exact
-          path={getCategoriesTypePath()}
-          component={CategoryTypeNavigation}
-        ></Route>
-        {/* top types plus id */}
-        <Route
-          exact
-          path={getGlossariesIdPath()}
-          component={GlossaryIdNavigation}
+          path={getGlossaryAuthorURL() + "/:priorSegments*/terms"}
+          component={TermTypeResourceNavigation}
         ></Route>
         <Route
           exact
-          path={getTermsIdPath()}
-          component={TermIdNavigation}
+          path={getGlossaryAuthorURL() + "/:priorSegments*/categories"}
+          component={CategoryTypeResourceNavigation}
+        ></Route>
+        {/* types plus id */}
+        <Route
+          exact
+          path={getGlossaryAuthorURL() + "/glossaries/:glossaryGuid"}
+          component={GlossaryIdResourceNavigation}
         ></Route>
         <Route
           exact
-          path={getCategoriesIdPath()}
-          component={CategoryIdNavigation}
+          path={getGlossaryAuthorURL() + "/:priorSegments*/terms/:termGuid"}
+          component={TermIdResourceNavigation}
         ></Route>
-
+        <Route
+          exact
+          path={getGlossaryAuthorURL() + "/:priorSegments*/categories/:categoryGuid"}
+          component={CategoryIdResourceNavigation}
+        ></Route>
       </Switch>
     </div>
   );

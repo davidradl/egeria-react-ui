@@ -1,57 +1,40 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
 import React, { useState, useEffect, useContext } from "react";
+import { IdentificationContext } from "../../../../../contexts/IdentificationContext";
 
-import { IdentificationContext } from "../../../../contexts/IdentificationContext";
-import Add32 from "../../../../images/carbon/Egeria_add_32";
-import Delete32 from "../../../../images/carbon/Egeria_delete_32";
-import Edit32 from "../../../../images/carbon/Egeria_edit_32";
-import ParentChild32 from "../../../../images/carbon/Egeria_parent_child_32";
-
-import Term32 from "../../../../images/odpi/Egeria_term_32";
-
-import { LocalNodeCard, NodeCardSection } from "../NodeCard/NodeCard";
+import Add32 from "../../../../../images/carbon/Egeria_add_32";
+import Delete32 from "../../../../../images/carbon/Egeria_delete_32";
+import Edit32 from "../../../../../images/carbon/Egeria_edit_32";
+import Term32 from "../../../../../images/odpi/Egeria_term_32";
+import { LocalNodeCard, NodeCardSection } from "../../NodeCard/NodeCard";
 import { withRouter } from "react-router-dom";
+import getNodeType from "../../properties/NodeTypes.js";
+import { issueRestGet, issueRestDelete } from "../../RestCaller";
 import { Pagination, Toggle } from "carbon-components-react";
-import NodeTableView from "../views/NodeTableView";
-
-import getNodeType from "../properties/NodeTypes.js";
-import { issueRestGet, issueRestDelete } from "../RestCaller";
+import NodeTableView from "../../views/NodeTableView";
 
 import { Link } from "react-router-dom";
 
-const GlossaryAuthorCategoriesNavigation = (props) => {
+const GlossaryAuthorTermsNavigation = (props) => {
   const identificationContext = useContext(IdentificationContext);
   const [nodes, setNodes] = useState([]);
+  const nodeType = getNodeType(identificationContext.getRestURL("glossary-author"), "term");
   const [errorMsg, setErrorMsg] = useState();
   const [selectedNodeGuid, setSelectedNodeGuid] = useState();
-  const [onlyTop, setOnlyTop] = useState(false);
-  const [completeResults, setCompleteResults] = useState([]);
   const [isCardView, setIsCardView] = useState(true);
   const [total, setTotal] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
 
-  console.log("GlossaryAuthorCategoriesNavigation " + props);
-
-  const nodeType = getNodeType(identificationContext.getRestURL("glossary-author"), "category");
   useEffect(() => {
     getChildren();
-  }, [selectedNodeGuid, onlyTop, pageSize, pageNumber]);
+  }, [selectedNodeGuid, pageSize, pageNumber]);
 
   const getChildren = () => {
     // encode the URI. Be aware the more recent RFC3986 for URLs makes use of square brackets which are reserved (for IPv6)
-    const url = encodeURI(props.getCategoriesURL + "?onlyTop=" + onlyTop + "&pageSize=" + (pageSize+1) + "&startingFrom="+((pageNumber-1)*pageSize));
+    const url = encodeURI(props.getTermsURL + "?pageSize=" + (pageSize+1) + "&startingFrom="+((pageNumber-1)*pageSize));
     issueRestGet(url, onSuccessfulGetChildren, onErrorGetChildren);
-  };
-
-  const onToggleTop = () => {
-    console.log("onToggleTop");
-    if (onlyTop) {
-      setOnlyTop(false);
-    } else {
-      setOnlyTop(true);
-    }
   };
   const paginationProps = () => ({
     disabled: false,
@@ -89,6 +72,14 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
       results.pop();
     }
     if (results && results.length > 0) {
+      results.map(function (row) {
+        row.id = row.systemAttributes.guid;
+        if (selectedNodeGuid && selectedNodeGuid === row.id) {
+          row.isSelected = true;
+          selectedInResults = true;
+        }
+        return row;
+      });
       setNodes(results);
     } else {
       setNodes([]);
@@ -121,6 +112,8 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
   const deleteIfSelected = (glossary) => {
     if (glossary.systemAttributes.guid === selectedNodeGuid) {
       const guid = selectedNodeGuid;
+
+      // TODO change URL
       const url = nodeType.url + "/" + guid;
       issueRestDelete(url, onSuccessfulDelete, onErrorDelete);
     }
@@ -141,7 +134,6 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
     setErrorMsg("");
     console.log("onSuccessfulGetChildren " + json.result);
     refreshNodes(json.result, pageSize, pageNumber);
-    setCompleteResults(json.result);
   };
 
   const onErrorGetChildren = (msg) => {
@@ -150,12 +142,11 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
     setNodes([]);
   };
 
-  function getAddCategoryUrl() {
-    console.log("getAddCategoryUrl " + props);
-    return props.match.url + "/categories/add-category";
+  function getAddNodeUrl() {
+    return props.match.url + "/terms/add-term";
   }
   function getEditNodeUrl() {
-    return props.match.url + "/categories/edit-category/" + selectedNodeGuid;
+    return props.match.url + "/terms/edit-term/" + selectedNodeGuid;
   }
   const isSelected = (nodeGuid) => {
     return nodeGuid === selectedNodeGuid;
@@ -169,14 +160,9 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
         <NodeCardSection>
           <article className="node-card__controls bx--col-sm-4 bx--col-md-1 bx--col-lg-3 bx--col-xlg-3 bx--col-max-2">
             <div className="bx--row">
-              <Link to={getAddCategoryUrl}>
+              <Link to={getAddNodeUrl}>
                 <Add32 kind="primary" />
               </Link>
-              {selectedNodeGuid && (
-                <Link to={props.getCategoriesURL}>
-                  <ParentChild32 kind="primary" />
-                </Link>
-              )}
               {selectedNodeGuid && (
                 <Link to={getEditNodeUrl()}>
                   <Edit32 kind="primary" />
@@ -186,14 +172,6 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
             </div>
           </article>
         </NodeCardSection>
-        <Toggle
-          aria-label="topCategoryToggle"
-          defaultToggled
-          labelA="All Categories"
-          labelB="Top Categories"
-          id="category-filter-toggle"
-          onToggle={onToggleTop}
-        />
         <NodeCardSection className="landing-page__r3">
           <Toggle
             aria-label="nodeCardTableToggle"
@@ -222,9 +200,9 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
             ))}
           </NodeCardSection>
         )}
-
-        {!isCardView && (
+         {!isCardView && (
           <NodeTableView
+            // tableKey={getNextTableKey()}
             nodeType={nodeType}
             nodes={nodes}
             setSelected={setSelected}
@@ -240,4 +218,4 @@ const GlossaryAuthorCategoriesNavigation = (props) => {
     </div>
   );
 };
-export default withRouter(GlossaryAuthorCategoriesNavigation);
+export default withRouter(GlossaryAuthorTermsNavigation);
