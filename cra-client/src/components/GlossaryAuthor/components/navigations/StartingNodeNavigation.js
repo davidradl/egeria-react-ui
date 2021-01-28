@@ -47,7 +47,6 @@ export default function StartingNodeNavigation({
 
   const [errorMsg, setErrorMsg] = useState();
   const [selectedNodeGuid, setSelectedNodeGuid] = useState();
-  // const [debouncedFilterCriteria, setDebouncedFilterCriteria] = useState();
 
   const nodeType = getNodeType(
     identificationContext.getRestURL("glossary-author"),
@@ -55,39 +54,29 @@ export default function StartingNodeNavigation({
   );
 
   const location = useLocation();
-  // Here's where the API call happens
-  // We use useEffect since this is an asynchronous action
   useEffect(
     () => {
       const query = new URLSearchParams(location.search);
       let isExactMatchSet = false;
+      let isCardViewSet = true;
       if (query.get("exactMatch"))
         isExactMatchSet = query.get("exactMatch") === "true";
+      if (query.get("isCardView"))
+        isCardViewSet = query.get("isCardView") === "true";
+
       if (query.get("pageSize")) setPageSize(parseInt(query.get("pageSize")));
       if (query.get("pageNumber"))
         setPageNumber(parseInt(query.get("pageNumber")));
       if (query.get("exactMatch")) setExactMatch(isExactMatchSet);
+      if (query.get("isCardView")) setIsCardView(isCardViewSet);
       if (query.get("searchString"))
         setFilterCriteria(query.get("searchString"));
-      // processUserCriteriaAndIssueSearch();
     },
-    // This is the useEffect input array
-    // Our useEffect function will only execute if this value changes ...
-    // ... and thanks to our hook it will only change if the original ...
-    // value (FilterCriteria) hasn't changed for more than 500ms.
-    // If the exactMatch changes then we need to re-issue the search.
-    // [debouncedFilterCriteria, exactMatch, pageSize, pageNumber]
+    // This useEffect is triggered on location changes. 
     [location]
   );
   useEffect(
     () => {
-      // const query = new URLSearchParams(location.search);
-      // let isExactMatchSet = false;
-      // if (query.get('exactMatch')) isExactMatchSet = (query.get('exactMatch') === 'true');
-      // if (query.get('pageSize')) setPageSize(parseInt(query.get('pageSize')));
-      // if (query.get('pageNumber')) setPageNumber(parseInt(query.get('pageNumber')));
-      // if (query.get('exactMatch')) setExactMatch(isExactMatchSet);
-      //if (query.get('searchString')) setDebouncedFilterCriteria(query.get('searchString'));
       processUserCriteriaAndIssueSearch();
     },
     // This is the useEffect input array
@@ -128,7 +117,7 @@ export default function StartingNodeNavigation({
     }
     // Update the location with the new query params
     history.replace({
-      search: encodeURI(query.toString())
+      search: encodeURI(query.toString()),
     });
   }
   function removeQueryParam(paramName) {
@@ -290,11 +279,15 @@ export default function StartingNodeNavigation({
 
   const onToggleCard = () => {
     console.log("onToggleCard");
-    if (isCardView) {
-      setIsCardView(false);
+    const query = new URLSearchParams(location.search);
+    const isCardViewSet = query.get("isCardView") === "true";
+    let queryParams = {};
+    if (isCardViewSet) {
+      queryParams.isCardView = false;
     } else {
-      setIsCardView(true);
+      queryParams.isCardView = true;
     }
+    updateQueryParams(queryParams);
   };
   function getAddNodeUrl() {
     // return match.path + "/add-" + nodeTypeName;
@@ -312,13 +305,13 @@ export default function StartingNodeNavigation({
   const onFilterCriteria = (e) => {
     let value = e.target.value;
     if (value === undefined || value === "") {
-      value='.*';
-    } 
+      value = ".*";
+    }
     let queryParams = {};
     queryParams.searchString = value;
 
-     updateQueryParams(queryParams);
-    
+    updateQueryParams(queryParams);
+
     // setFilterCriteria(e.target.value);
   };
   const isSelected = (nodeGuid) => {
