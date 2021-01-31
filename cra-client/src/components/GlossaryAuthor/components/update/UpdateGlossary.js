@@ -10,6 +10,6 @@ export default function UpdateGlossary(props) {
   const identificationContext = useContext(IdentificationContext);
   console.log("UpdateGlossary");
   return (
-   <UpdateNode currentNodeType={getNodeType(identificationContext.getRestURL("glossary-author"), "glossary")} guid={props.match.params.guidtoedit} />
+    <UpdateNode currentNodeType={getNodeType(identificationContext.getRestURL("glossary-author"), "glossary")} />
   );
 }

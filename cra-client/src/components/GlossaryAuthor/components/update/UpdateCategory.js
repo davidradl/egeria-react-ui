@@ -10,6 +10,6 @@ export default function UpdateCategory(props) {
   const identificationContext = useContext(IdentificationContext);
   console.log("UpdateCategory");
   return (
-   <UpdateNode currentNodeType={getNodeType(identificationContext.getRestURL("glossary-author"), "category")} guid={props.match.params.guidtoedit} />
+   <UpdateNode currentNodeType={getNodeType(identificationContext.getRestURL("glossary-author"), "category")} />
   );
 }

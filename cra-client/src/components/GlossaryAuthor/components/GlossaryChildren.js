@@ -6,8 +6,8 @@ import { withRouter } from "react-router-dom";
 
 function GlossaryChildren(props) {
   const getParentGuid = () => {
-    return props.match.params.glossaryguid;
+    return props.match.params.guid;
   };
-  return <NodeChildren parentNodeTypeName="glossary" parentguid={getParentGuid()} />;
+  return <NodeChildren parentNodeTypeName="glossary" parentguid={getParentGuid()} childType={props.childType} />;
 }
 export default withRouter(GlossaryChildren);

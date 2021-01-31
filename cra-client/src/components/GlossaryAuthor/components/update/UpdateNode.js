@@ -26,7 +26,7 @@ export default function UpdateNode(props) {
   const [currentNode, setCurrentNode] = useState();
   const [errorMsg, setErrorMsg] = useState();
   console.log("UpdateNode");
-  const { guidtoedit } = useParams();
+  const { guid } = useParams();
   const url = getUrl();
   let history = useHistory();
 
@@ -35,7 +35,7 @@ export default function UpdateNode(props) {
     return "Getting details";
   };
   function getUrl() {
-    return props.currentNodeType.url + "/" + guidtoedit;
+    return props.currentNodeType.url + "/" + guid;
   }
 
   const handleClickUpdate = (e) => {

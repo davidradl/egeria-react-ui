@@ -48,17 +48,17 @@ export default function GlossaryAuthorResourceRoutes() {
         {/* types plus id */}
         <Route
           exact
-          path={getGlossaryAuthorURL() + "/glossaries/:glossaryGuid"}
+          path={getGlossaryAuthorURL() + "/glossaries/:guid"}
           component={GlossaryIdResourceNavigation}
         ></Route>
         <Route
           exact
-          path={getGlossaryAuthorURL() + "/:priorSegments*/terms/:termGuid"}
+          path={getGlossaryAuthorURL() + "/:priorSegments*/terms/:guid"}
           component={TermIdResourceNavigation}
         ></Route>
         <Route
           exact
-          path={getGlossaryAuthorURL() + "/:priorSegments*/categories/:categoryGuid"}
+          path={getGlossaryAuthorURL() + "/:priorSegments*/categories/:guid"}
           component={CategoryIdResourceNavigation}
         ></Route>
       </Switch>

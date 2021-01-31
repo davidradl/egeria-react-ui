@@ -267,7 +267,7 @@ export default function StartingNodeNavigation({
   };
 
   function getNodeChildrenUrl() {
-    return match.path + "/" + selectedNodeGuid + "/children";
+    return match.path + "/" + selectedNodeGuid + "?action=CHILDREN";
   }
   /**
    * The function returns another function; this is required by react Link. The below syntax is required to be able to handle the parameter.
@@ -290,17 +290,21 @@ export default function StartingNodeNavigation({
     updateQueryParams(queryParams);
   };
   function getAddNodeUrl() {
-    // return match.path + "/add-" + nodeTypeName;
     return match.path + "?action=CREATE";
   }
   function getGlossaryQuickTermsUrl() {
-    return match.path + "/" + selectedNodeGuid + "/quick-terms";
+    console.log("match path qt ");
+    console.log(match.path);
+    return match.path + "/" + selectedNodeGuid + "?action=QUICK-TERMS";
   }
   function getCategoryQuickTermsUrl() {
-    return match.path + "/" + selectedNodeGuid + "/quick-category-terms";
+    // TODO can this just be quick terms?
+    return match.path + "/" + selectedNodeGuid +  "?action=QUICK-CATEGORY-TERMS";
   }
   function getEditNodeUrl() {
-    return match.path + "/edit-" + nodeTypeName + "/" + selectedNodeGuid;
+    console.log("match path edit ");
+    console.log(match.path);
+    return match.path + "/" + selectedNodeGuid + "?action=EDIT";
   }
   const onFilterCriteria = (e) => {
     let value = e.target.value;
@@ -311,8 +315,6 @@ export default function StartingNodeNavigation({
     queryParams.searchString = value;
 
     updateQueryParams(queryParams);
-
-    // setFilterCriteria(e.target.value);
   };
   const isSelected = (nodeGuid) => {
     return nodeGuid === selectedNodeGuid;
