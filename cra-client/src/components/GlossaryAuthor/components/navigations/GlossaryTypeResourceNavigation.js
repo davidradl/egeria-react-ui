@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import StartingNodeNavigation from "./StartingNodeNavigation";
+import NodesNavigation from "./NodesNavigation";
 // create glossary
 import CreateGlossary from "../create/CreateGlossary";
 
@@ -34,7 +34,7 @@ export default function GlossaryTypeResourceNavigation({ match }) {
   return (
     <div>
       {isGlossaryList && (
-        <StartingNodeNavigation match={match} nodeTypeName="glossary" />
+        <NodesNavigation match={match} nodeTypeName="glossary" />
       )}
       {isCreate && (
         <CreateGlossary match={match} />

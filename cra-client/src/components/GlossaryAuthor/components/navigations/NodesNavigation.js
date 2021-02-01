@@ -21,7 +21,7 @@ import getNodeType from "../properties/NodeTypes.js";
 import { Link } from "react-router-dom";
 import { useLocation, useHistory } from "react-router-dom";
 
-export default function StartingNodeNavigation({
+export default function NodesNavigation({
   match,
   nodeTypeName,
   onSelectCallback,
@@ -33,7 +33,6 @@ export default function StartingNodeNavigation({
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   let history = useHistory();
-  // State and setter for search term
   // State and setter for search term
   const [filterCriteria, setFilterCriteria] = useState("");
   const [exactMatch, setExactMatch] = useState(false);
@@ -148,7 +147,7 @@ export default function StartingNodeNavigation({
 
     console.log("passed page number " + passedPageNumber);
     console.log("passed page size " + passedPageSize);
-    console.log("resuilts length " + results.length);
+    console.log("results length " + results.length);
     // define as a constant so that the + is an arithmetic + not a string concatination +.
     const calculatedTotal =
       (passedPageNumber - 1) * passedPageSize + results.length;
@@ -265,16 +264,20 @@ export default function StartingNodeNavigation({
     queryParams.exactMatch = checkBox.checked;
     updateQueryParams(queryParams);
   };
-
-  function getNodeChildrenUrl() {
-    return match.path + "/" + selectedNodeGuid + "?action=CHILDREN";
+/*
+ * Get the categories under this selected node
+ */
+  function getCategoriesUrl() {
+    // return match.path + "/" + selectedNodeGuid + "?action=CHILDREN";
+    // default to terms
+    return match.path + "/" + selectedNodeGuid + "/categories";
   }
   /**
    * The function returns another function; this is required by react Link. The below syntax is required to be able to handle the parameter.
    * Not working ...
    */
   const getNodeChildrenUrlUsingGuid = (guid) => () => {
-    return `${match.path}/${guid}/children`;
+    return `${match.path}/${guid}/categories`;
   };
 
   const onToggleCard = () => {
@@ -290,21 +293,24 @@ export default function StartingNodeNavigation({
     updateQueryParams(queryParams);
   };
   function getAddNodeUrl() {
-    return match.path + "?action=CREATE";
+    console.log("location.pathname add ");
+    console.log(location.pathname);
+    // do not use match.path to get the current location as that contains the parameters
+    return location.pathname + "?action=CREATE";
   }
-  function getGlossaryQuickTermsUrl() {
-    console.log("match path qt ");
-    console.log(match.path);
-    return match.path + "/" + selectedNodeGuid + "?action=QUICK-TERMS";
+  function getQuickTermsUrl() {
+    console.log("location.pathname qt");
+    console.log(location.pathname);
+    return location.pathname + "/" + selectedNodeGuid + "?action=QUICK-TERMS";
   }
-  function getCategoryQuickTermsUrl() {
-    // TODO can this just be quick terms?
-    return match.path + "/" + selectedNodeGuid +  "?action=QUICK-CATEGORY-TERMS";
-  }
+  // function getCategoryQuickTermsUrl() {
+  //   // TODO can this just be quick terms?
+  //   return match.path + "/" + selectedNodeGuid +  "?action=QUICK-CATEGORY-TERMS";
+  // }
   function getEditNodeUrl() {
-    console.log("match path edit ");
-    console.log(match.path);
-    return match.path + "/" + selectedNodeGuid + "?action=EDIT";
+    console.log("location.pathname edit ");
+    console.log(location.pathname);
+    return location.pathname + "/" + selectedNodeGuid + "?action=EDIT";
   }
   const onFilterCriteria = (e) => {
     let value = e.target.value;
@@ -361,22 +367,15 @@ export default function StartingNodeNavigation({
               )}
               {selectedNodeGuid &&
                 !onSelectCallback &&
-                nodeTypeName === "glossary" && (
-                  <Link to={getGlossaryQuickTermsUrl}>
-                    <Term32 kind="primary" />
-                  </Link>
-                )}
-              {selectedNodeGuid &&
-                !onSelectCallback &&
-                nodeTypeName === "category" && (
-                  <Link to={getCategoryQuickTermsUrl}>
+                nodeTypeName !== "term" && (
+                  <Link to={getQuickTermsUrl}>
                     <Term32 kind="primary" />
                   </Link>
                 )}
               {selectedNodeGuid &&
                 !onSelectCallback &&
                 nodeTypeName !== "term" && (
-                  <Link to={getNodeChildrenUrl}>
+                  <Link to={getCategoriesUrl}>
                     <ParentChild32 kind="primary" />
                   </Link>
                 )}

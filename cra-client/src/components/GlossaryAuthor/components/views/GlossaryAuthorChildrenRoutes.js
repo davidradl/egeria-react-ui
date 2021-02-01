@@ -2,8 +2,8 @@
 /* Copyright Contributors to the ODPi Egeria project. */
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import GlossaryAuthorCategoriesNavigation from "../GlossaryAuthorCategoriesNavigation";
-import GlossaryAuthorTermsNavigation from "../GlossaryAuthorTermsNavigation";
+import GlossaryAuthorCategoriesNavigation from "./old/GlossaryAuthorCategoriesNavigation";
+import GlossaryAuthorTermsNavigation from "./old/GlossaryAuthorTermsNavigation";
 
 export default function GlossaryAuthorChildrenRoutes(props) {
 

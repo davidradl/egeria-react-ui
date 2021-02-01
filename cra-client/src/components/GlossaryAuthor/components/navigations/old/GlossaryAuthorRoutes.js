@@ -7,9 +7,9 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import GlossaryAuthorNavigation from "../GlossaryAuthorNavigation";
 import TermAuthorNavigation from "../GlossaryAuthorNavigation";
 import CategoryAuthorNavigation from "../GlossaryAuthorNavigation";
-import GlossaryAuthorCategoriesNavigation from "./GlossaryAuthorCategoriesNavigation";
+import GlossaryAuthorCategoriesNavigation from "../GlossaryAuthorCategoriesNavigation";
 import GlossaryAuthorChildCategoriesNavigation from "./GlossaryAuthorChildCategoriesNavigation";
-import GlossaryAuthorTermsNavigation from "./GlossaryAuthorTermsNavigation";
+import GlossaryAuthorTermsNavigation from "../GlossaryAuthorTermsNavigation";
 import GlossaryAuthorBreadCrumb from "../../GlossaryAuthorBreadCrumb";
 // children components
 import GlossaryChildren from "../../GlossaryChildren";

@@ -6,7 +6,7 @@ import {
   ProgressStep,
   Button,
 } from "carbon-components-react";
-import StartingNodeNavigation from "../navigations/StartingNodeNavigation";
+import NodesNavigation from "../navigations/NodesNavigation";
 import CreateNode from "../create/CreateNode";
 import getNodeType from "../properties/NodeTypes.js";
 import { IdentificationContext } from "../../../../contexts/IdentificationContext";
@@ -90,7 +90,7 @@ export default function CreateNodeWizard(props) {
           <h3 className="create-wizard-page-title">{step1Title()}</h3>
         )}
         {currentStepIndex === 0 && (
-          <StartingNodeNavigation
+          <NodesNavigation
             match={props.match}
             nodeTypeName="glossary"
             onSelectCallback={onGlossarySelect}

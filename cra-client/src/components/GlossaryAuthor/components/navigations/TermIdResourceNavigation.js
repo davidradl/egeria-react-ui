@@ -1,13 +1,36 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
-import React from "react";
+import React, {useState, useEffect } from "react";
+
+import { useLocation } from "react-router-dom";
+import UpdateTerm from "../update/UpdateTerm";
 
 export default function TermIdResourceNavigation({ match }) {
+  const [isEdit, setIsEdit] = useState(false);
+
+
+  const location = useLocation();
+  useEffect(() => {
+    setIsEdit(false);
+
+    if (location.search) {
+      const query = new URLSearchParams(location.search);
+      const action = query.get('action');
+      if (action && action === 'EDIT') {
+        setIsEdit(true);
+      } 
+      //TODO other actions
+    } else {
+      setIsEdit(true);
+    }
+
+  }, [location]);
   return (
     <div>
-      <div>Term id </div>
-      <div>Term guid is {match.params.termGuid}</div>
-      <div>Prior segments are {match.params.priorSegments}</div>
+
+      {isEdit && (
+       <UpdateTerm />
+      )}
     </div>
   );
 }

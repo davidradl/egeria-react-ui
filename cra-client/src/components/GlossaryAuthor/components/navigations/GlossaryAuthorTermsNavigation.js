@@ -1,18 +1,18 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Copyright Contributors to the ODPi Egeria project. */
 import React, { useState, useEffect, useContext } from "react";
-import { IdentificationContext } from "../../../../../contexts/IdentificationContext";
+import { IdentificationContext } from "../../../../contexts/IdentificationContext";
 
-import Add32 from "../../../../../images/carbon/Egeria_add_32";
-import Delete32 from "../../../../../images/carbon/Egeria_delete_32";
-import Edit32 from "../../../../../images/carbon/Egeria_edit_32";
-import Term32 from "../../../../../images/odpi/Egeria_term_32";
-import { LocalNodeCard, NodeCardSection } from "../../NodeCard/NodeCard";
+import Add32 from "../../../../images/carbon/Egeria_add_32";
+import Delete32 from "../../../../images/carbon/Egeria_delete_32";
+import Edit32 from "../../../../images/carbon/Egeria_edit_32";
+import Term32 from "../../../../images/odpi/Egeria_term_32";
+import { LocalNodeCard, NodeCardSection } from "../NodeCard/NodeCard";
 import { withRouter } from "react-router-dom";
-import getNodeType from "../../properties/NodeTypes.js";
-import { issueRestGet, issueRestDelete } from "../../RestCaller";
+import getNodeType from "../properties/NodeTypes.js";
+import { issueRestGet, issueRestDelete } from "../RestCaller";
 import { Pagination, Toggle } from "carbon-components-react";
-import NodeTableView from "../../views/NodeTableView";
+import NodeTableView from "../views/NodeTableView";
 
 import { Link } from "react-router-dom";
 

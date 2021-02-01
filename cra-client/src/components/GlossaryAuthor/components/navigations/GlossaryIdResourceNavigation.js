@@ -11,8 +11,8 @@ export default function GlossaryIdResourceNavigation({ match }) {
   // const [isGlossaryList, setIsGlossaryList] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isQuickTerms, setIsQuickTerms] = useState(false);
-  const [isChildren, setIsChildren] = useState(false);
-  const [childType, setChildType] = useState('terms');
+  // const [isChildren, setIsChildren] = useState(false);
+  // const [childType, setChildType] = useState('terms');
 
 
   const location = useLocation();
@@ -26,13 +26,14 @@ export default function GlossaryIdResourceNavigation({ match }) {
       
       if (action && action === 'EDIT') {
         setIsEdit(true);
-      } if (action && action === 'QUICK-TERMS') {  
+      } else if (action && action === 'QUICK-TERMS') {  
         setIsQuickTerms(true); 
-      } if (action && action === 'CHILDREN') {  
-        if (type) {
-          setChildType(type);
-        }
-        setIsChildren(true); 
+      // }  
+      // if (action && action === 'CHILDREN') {  
+      //   if (type) {
+      //     setChildType(type);
+      //   }
+      //   setIsChildren(true); 
       } else {
         setIsEdit(true);
       }
@@ -50,9 +51,9 @@ export default function GlossaryIdResourceNavigation({ match }) {
       {isQuickTerms && (
        <GlossaryQuickTerms />
       )}
-      {isChildren && (
+      {/* {isChildren && (
        <GlossaryChildren childType={childType} />
-      )}
+      )} */}
     </div>
   );
 }

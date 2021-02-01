@@ -2,14 +2,14 @@
 /* Copyright Contributors to the ODPi Egeria project. */
 import React, { useContext } from "react";
 
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import { IdentificationContext } from "../../../../contexts/IdentificationContext";
 import GlossaryAuthorBreadCrumb from "../GlossaryAuthorBreadCrumb";
 
 import GlossaryTypeResourceNavigation from "./GlossaryTypeResourceNavigation";
-import CategoryTypeResourceNavigation from "./CategoryTypeResourceNavigation";
 import TermTypeResourceNavigation     from "./TermTypeResourceNavigation";
+import CategoryTypeResourceNavigation     from "./CategoryTypeResourceNavigation";
 
 import GlossaryIdResourceNavigation   from "./GlossaryIdResourceNavigation";
 import CategoryIdResourceNavigation   from "./CategoryIdResourceNavigation";
@@ -25,11 +25,7 @@ export default function GlossaryAuthorResourceRoutes() {
 
       <Switch>
         {/* types  */}
-        <Route
-          exact
-          path={getGlossaryAuthorURL()}
-          component={GlossaryTypeResourceNavigation}
-        ></Route>
+        <Redirect path={getGlossaryAuthorURL()} exact to={getGlossaryAuthorURL() + "/glossaries"} />
         <Route
           exact
           path={getGlossaryAuthorURL() + "/glossaries"}
