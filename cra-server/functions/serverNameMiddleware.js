@@ -29,8 +29,10 @@ const serverNameMiddleWare = (req, res, next) => {
   // '/' goes to "" and ""
   // "/ddd" goes to "" and "ddd"
   const segmentNumber = segmentArray.length;
+
   let noServerfound = false;
   const servers = req.app.get("servers");
+
 
   if (segmentNumber > 1) {
     // the supplied url always starts with a /
